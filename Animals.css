@@ -1,0 +1,77 @@
+#Images
+{
+  padding-top: 1%;
+  float:center;
+  padding-left:16%;
+  margin-bottom: -50px;
+}
+
+#fox
+{
+    padding-left: 3%;
+}
+
+
+/*div of input boxes*/
+#Input_Create
+{
+  margin-top: 25px;
+  float: left;
+  padding-left: 5%;
+  margin-bottom: 40px;
+}
+
+/*div of find by id*/
+#Input_Search
+{
+  margin-top: 25px;
+  float: left;
+  position: relative;
+  margin-bottom: 40px;
+  padding-left: 10%;
+}
+
+/*div of table*/
+#Info
+{
+  padding-left: 4%;
+  margin-top: 175px;
+  overflow-y: scroll;
+  /*overflow-x: scroll;*/
+  height:600px;
+  width: 91%;
+}
+
+table
+{
+  width: 100%;
+  border-collapse: collapse;
+  border: 3px solid black;
+  font-size: 20px;
+}
+
+ th
+ {
+   width: 13%;
+   border: 3px solid black;
+   /*text-align: left;*/
+ }
+
+ td
+ {
+   width: 13%;
+   border: 3px solid black;
+ }
+
+body
+{
+  background-color:#FDB851;
+  background-image: url("Background.png");
+  color: #800000;
+}
+
+button
+{
+  border-radius: 50%;
+  font-size: 15px;
+}

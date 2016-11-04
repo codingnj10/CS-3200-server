@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> Test </title>
+    <link rel="stylesheet" href="Animals.css">
+  </head>
+
+  <body>
+  <div id=Images>
+    <img id=title_img src="Title.png" alt="Title"/>
+    <img id=fox src="logoc.png" alt="My animal"/>
+  </div>
+  <div id=Input_Create>
+    <h2> Create New Entry </h2>
+    <input id=name type="text" size="20" placeholder="Name">
+    <input id=animal type="text" size="10" placeholder="Kind of animal">
+    <input id=breed type="text" size="10" placeholder="Breed">
+    <input id=color size="10" type="text" placeholder="Color">
+    <select id=gender>
+      <option value="" disabled="disabled" selected="selected">Gender</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+    </select>
+    <input id=age type="text" size="3" placeholder="Age">
+    <button id=CreateBtn> Create </button>
+    <button id=ClearBtn> Clear </button>
+  </div>
+
+    <div id=Input_Search>
+      <h2> Find by ID </h2>
+      <input id=id type="text" size="10" placeholder="ID to search">
+      <button id=FindBtn> Find by ID</button>
+      <button id=GetAllBtn> Display All </button>
+    </div>
+
+
+    <div id=Info>
+      <table id="Data">
+      </table>
+    </div>
+
+    <script src="Animals.js"></script>
+  </body>
+</html>
