@@ -54,7 +54,6 @@ class myServer(BaseHTTPRequestHandler):
             #Reading from url
             data = self.rfile.read(int(Lenght)).decode("utf-8")#gets path as string
             Parsed_Data = parse_qs(data)#Converts data to dictionary "Key and values(lists)"
-
             #Insert ito database
             db.putAnimal(Parsed_Data)
             self.wfile.write(bytes("Created", "utf-8"))

@@ -22,7 +22,7 @@ var GetItems = function()
       {
         console.log("Get All Items Success");
         //console.log(RequestGetAll.responseText);
-        CreateTableAll(JSON.parse(RequestGetAll.responseText));
+        CreateTable(JSON.parse(RequestGetAll.responseText));
         ClearInputBoxes();
       }
       else
@@ -163,7 +163,7 @@ var GetItem = function(Update, ID)
         //console.log(RequestGet.responseText);
         if(Update == false)
         {
-            CreateTableSingle(JSON.parse(RequestGet.responseText));
+            CreateTable(JSON.parse(RequestGet.responseText));
         }
         Fill_Input_Boxes(RequestGet.responseText);
       }
@@ -307,27 +307,27 @@ var CreateTableHeaders = function(Table)
   Table.appendChild(NewRow);
 };
 
-var CreateTableAll = function(data)
+var CreateTable = function(data)
 {
   var Table = document.getElementById("Data");
   Table.innerHTML = "";
   CreateTableHeaders(Table);
-  for (key in data)
+  for (collection in data)
   {//get into collecection
-    for(i=0; i<data[key].length ; i++)
+    for(i=0; i<data[collection].length ; i++)
     {//get into collection main array
       var NewRow = document.createElement("tr");
-      for(j=0; j<data[key][i].length; j++)
+      for(key in data[collection][i])
       {//get into each of the entriesvar Col = document.createElement("td");
         var Col = document.createElement("td");
-        if(j==0) //Make a button for ID
+        if(key=="id") //Make a button for ID
         {
           //Find Button
           var But = document.createElement("button");
-          id = data[key][i][j];
+          id = data[collection][i][key];
           //Connect Button to function
           But.onclick = ConnectIDButtonsGet;
-          But.innerHTML=data[key][i][j];
+          But.innerHTML=data[collection][i][key];
           Col.appendChild(But);
           //DeleteBtn
           var DelBut = document.createElement("button");
@@ -344,57 +344,13 @@ var CreateTableAll = function(data)
         }
         else
         {
-          Col.innerHTML = data[key][i][j];
+          Col.innerHTML = data[collection][i][key];
         }
         NewRow.appendChild(Col);
       }
       Table.appendChild(NewRow);
     }
   }
-};
-
-var CreateTableSingle = function(data)
-{
-  var Table = document.getElementById("Data");
-  Table.innerHTML = "";
-  CreateTableHeaders(Table);
-  var NewRow = document.createElement("tr");
-  for (key in data)
-  {//get into collecection
-    for(i=0; i<data[key].length ; i++)
-    {//get into collection single item entries
-      var Col = document.createElement("td");
-      if(i==0) //Make a button for ID
-      {
-        //ID button
-        var But = document.createElement("button");
-        id = data[key][i];
-        //Connect Button to function
-        But.onclick = ConnectIDButtonsGet;
-        But.innerHTML=data[key][i];
-        Col.appendChild(But);
-        //DeleteBtn
-        var DelBut = document.createElement("button");
-        DelBut.value = id;
-        DelBut.onclick = ConnectIDButtonsDelete;
-        DelBut.innerHTML = "Delete";
-        Col.appendChild(DelBut);
-        //UpdateBtn
-        var UpdBut = document.createElement("button");
-        UpdBut.value = id;
-        UpdBut.onclick = ConnectIDButtonsUpdate;
-        UpdBut.innerHTML = "Update";
-        Col.appendChild(UpdBut);
-        NewRow.appendChild(Col);
-      }
-      else
-      {
-        Col.innerHTML = data[key][i];
-      }
-      NewRow.appendChild(Col);
-    }
-  }
-  Table.appendChild(NewRow);
 };
 
 GetItems();

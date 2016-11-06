@@ -4,6 +4,7 @@ class Animals:
     def __init__(self):
         self.databasefile = "Animals.db"
         self.Collection = "Animals"
+        self.databasekeys = ["id","name", "animal", "type", "color", "gender", "age"]
         #Connect to database
         self.connection = sqlite3.connect(self.databasefile)
         self.cursor = self.connection.cursor()
@@ -17,10 +18,10 @@ class Animals:
         return self.database
 
     def getAnimal(self, ID):
-        myentry = {}
-        for entry in self.database[self.Collection]:
-            if entry[0] == int(ID):
-                myentry[self.Collection] = entry
+        myentry = {self.Collection: []}
+        for entrydict in self.database[self.Collection]:
+            if entrydict["id"] == int(ID):
+                myentry[self.Collection].append(entrydict)
                 return myentry
 
     def putAnimal(self, data):
@@ -43,16 +44,16 @@ class Animals:
         #Make a json file
         database = {self.Collection: []}
         for row in self.cursor.execute("SELECT * FROM Animals"):
-            rowList =[]
-            for entry in row:
-                rowList.append(entry)
-            database[self.Collection].append(rowList)
+            rowDict ={}
+            for i in range(len(row)):
+                rowDict[self.databasekeys[i]]=row[i]
+            database[self.Collection].append(rowDict)
         return database
 
     def FindItem(self, item):
         if item=="":
             return False
-        for entry in self.database[self.Collection]:
-            if entry[0] == int(item):
+        for entrydict in self.database[self.Collection]:
+            if entrydict["id"] == int(item):
                 return True
         return False
