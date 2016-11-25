@@ -28,3 +28,15 @@ POST /animals
 PUT /animals/*ID*
 # Delete
 DELETE /animals/*ID*
+
+
+#USERS DB
+CREATE TABLE "users" (id INTEGER PRIMARY KEY,
+fname VARCHAR NOT NULL,
+lname VARCHAR NOT NULL,
+email VARCHAR NOT NULL,
+encrypted_password VARCHAR NOT NULL,
+address VAR CHAR,
+phone VARCHAR,
+city VARCHAR,
+state VARCHAR(2) NOT NULL);
