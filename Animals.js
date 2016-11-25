@@ -4,184 +4,10 @@ var myURLRegister = "http://localhost:8080/users";
 var InputBoxesNamesRegister = ["fname", "lname", "address", "city", "state", "phone", "email", "password", "confirm_password"];
 var KeysRegister = ["fname", "lname", "address", "city", "state", "phone", "email", "password"];
 
-
-//--------------------POST-----------------------
-var RegisterBtn = document.getElementById("RegisterBtn");
-RegisterBtn.onclick = function()
-{
-  if(ValidateInputAllRegister())
-  {
-      POSTRegister();
-  }
-  else
-  {
-    console.log("Register Input error");
-  }
-};
-
-var POSTRegister = function()
-{
-  var RequestPostRegister = new XMLHttpRequest();
-  RequestPostRegister.onreadystatechange = function()
-  {
-    if (RequestPostRegister.readyState == XMLHttpRequest.DONE)
-    {
-      if(RequestPostRegister.status == 201)
-      {
-        ClearInputBoxesRegister();
-        GetAnimals();
-        //console.log(RequestPost.responseText);
-      }
-      else
-      {
-        console.log("Register Failed");
-      }
-    }
-  };
-
-  //Request Code
-  var Path = ConstructPathPOSTRegister();
-  console.log(Path);
-  //Send Request
-  RequestPostRegister.open("POST", myURLRegister);
-  RequestPostRegister.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  RequestPostRegister.withCredentials = true;
-  RequestPostRegister.send(Path);
-};
-
-var ConstructPathPOSTRegister = function()
-{
-  var Path = "";
-  var Val ="";
-  for(i =0; i<KeysRegister.length; i++)
-  {
-    Val = encodeURIComponent(document.getElementById(InputBoxesNamesRegister[i]).value);
-    Path= Path + KeysRegister[i]+ "=" + Val;
-    //Add & for all entries before the last one
-    if(i != KeysRegister.length-1)
-    {
-      Path+="&";
-    }
-  }
-  return Path;
-};
-
-//Check if all boxes have an input value
-var ValidateInputAllRegister = function()
-{
-  for(i =0; i<InputBoxesNamesRegister.length; i++)
-  {
-    if(document.getElementById(InputBoxesNamesRegister[i]).value == "")
-    {
-      return false;
-    }
-  }
-  //validate password confirm
-  var psswrd = document.getElementById("password").value;
-  var c_psswrd = document.getElementById("confirm_password").value;
-  if(psswrd!=c_psswrd)
-  {
-    return false;
-    console.log("Passwords do not match")
-  }
-  return true;
-};
-
-var ClearInputBoxesRegister = function()
-{
-  for(i =0; i<InputBoxesNamesRegister.length; i++)
-  {
-      document.getElementById(InputBoxesNamesRegister[i]).value = "";
-  }
-};
-
 //------------------------USERS LOGIN---------------------------
 var myURLogin = "http://localhost:8080/sessions";
 var InputBoxesNamesLogin = ["loginemail", "loginpassword"];
 var KeysLogin = ["email", "password"];
-
-
-//--------------------POST-----------------------
-var LoginBtn = document.getElementById("LoginBtn");
-LoginBtn.onclick = function()
-{
-  if(ValidateInputAllLogin())
-  {
-      POSTLogin();
-  }
-  else
-  {
-    console.log("Register Input error");
-  }
-};
-
-var POSTLogin = function()
-{
-  var RequestPostLogin = new XMLHttpRequest();
-  RequestPostLogin.onreadystatechange = function()
-  {
-    if (RequestPostLogin.readyState == XMLHttpRequest.DONE)
-    {
-      if(RequestPostLogin.status == 200)
-      {
-        ClearInputBoxesLogin();
-        GetAnimals();
-        //console.log(RequestPost.responseText);
-      }
-      else
-      {
-        console.log("Register Failed");
-      }
-    }
-  };
-
-  //Request Code
-  var Path = ConstructPathPOSTLogin();
-  console.log(Path);
-  //Send Request
-  RequestPostLogin.open("POST", myURLogin);
-  RequestPostLogin.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  RequestPostLogin.withCredentials = true;
-  RequestPostLogin.send(Path);
-};
-
-var ConstructPathPOSTLogin = function()
-{
-  var Path = "";
-  var Val ="";
-  for(i =0; i<KeysLogin.length; i++)
-  {
-    Val = encodeURIComponent(document.getElementById(InputBoxesNamesLogin[i]).value);
-    Path= Path + KeysLogin[i]+ "=" + Val;
-    //Add & for all entries before the last one
-    if(i != KeysLogin.length-1)
-    {
-      Path+="&";
-    }
-  }
-  return Path;
-};
-
-//Check if all boxes have an input value
-var ValidateInputAllLogin = function()
-{
-  for(i =0; i<InputBoxesNamesLogin.length; i++)
-  {
-    if(document.getElementById(InputBoxesNamesLogin[i]).value == "")
-    {
-      return false;
-    }
-  }
-  return true;
-};
-
-var ClearInputBoxesLogin = function()
-{
-  for(i =0; i<InputBoxesNamesLogin.length; i++)
-  {
-      document.getElementById(InputBoxesNamesLogin[i]).value = "";
-  }
-};
 
 //----------------------------------------------------ANIMALS--------------------------------------------------------------------
 var myURLAnimals = "http://localhost:8080/animals";
@@ -189,27 +15,33 @@ var InputBoxesNames = ["name", "animal", "breed", "color", "gender", "age"];
 var Keys = ["name", "animal", "type", "color", "gender", "age"];
 var AnimalKeys = ["id","name", "animal", "type", "color", "gender", "age"];
 var Headers = ["ID", "Name", "Type of Animal", "Breed", "Color", "Gender", "Age"];//To create headers of table
-//------------------GET ALL ITEMS--------------------------
 
-var GetAllBtn = document.getElementById("GetAllBtn");
-GetAllBtn.onclick = function()
-{
-  GetAnimals();
-};
+//--------------------POST-----------------------
 
-var GetAnimals = function()
+
+//--------------------------------------GET--------------------------------
+var Get = function(type, Update , ID=0)
 {
-  var RequestGetAll = new XMLHttpRequest();
-  RequestGetAll.onreadystatechange = function()
+  var RequestGet = new XMLHttpRequest();
+  RequestGet.onreadystatechange = function()
   {
-    if (RequestGetAll.readyState == XMLHttpRequest.DONE)
+    if (RequestGet.readyState == XMLHttpRequest.DONE)
     {
-      if (RequestGetAll.status == 200)
+      if (RequestGet.status == 200)
       {
-        console.log("Get All Items Success");
+        console.log("Get Items Success");
+        if(type == "Animals" || Update == true)//Whether or not to update table
+        {
+          CreateTable(JSON.parse(RequestGet.responseText));
+          ClearInputBoxes();
+        }
+        //For get of a single animal fill input boxes for update
+        if(type == "Animal")
+        {
+          Fill_Input_Boxes(JSON.parse(RequestGet.responseText));
+        }
+
         //console.log(RequestGetAll.responseText);
-        CreateTable(JSON.parse(RequestGetAll.responseText));
-        ClearInputBoxes();
       }
       else
       {
@@ -218,13 +50,31 @@ var GetAnimals = function()
     }
   };
 
-  //ConstructPath
-  RequestGetAll.open("GET", myURLAnimals);//Set request type
-  RequestGetAll.withCredentials = true;
-  RequestGetAll.send();//Send Request
+  //Construct URL
+  if(type == "Animals")
+  {
+    URL = myURLAnimals;
+  }
+  else if(type == "Animal")
+  {
+    URL = myURLAnimals + "/" + ID;
+  }
+  RequestGet.open("GET", URL);
+  RequestGet.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  RequestGet.withCredentials = true;
+  RequestGet.send();
 };
 
-//----------------------GET ONE ITEM------------------------
+
+//------------------GET ANIMALS--------------------------
+
+var GetAllBtn = document.getElementById("GetAllBtn");
+GetAllBtn.onclick = function()
+{
+  Get("Animals", true);
+};
+
+//----------------------GET ONE ANIMAL------------------------
 
 var FindBtn = document.getElementById("FindBtn");
 FindBtn.onclick = function()
@@ -232,7 +82,7 @@ FindBtn.onclick = function()
   if(ValidateInputId())
   {
     var ID = document.getElementById("id").value;
-    GetAnimal(false, ID);
+    Get("Animal", true, ID);
   }
   else
   {
@@ -250,69 +100,43 @@ var Fill_Input_Boxes = function(myJSON)
   }
 };
 
-var GetAnimal = function(Update, ID)
-{
-  var RequestGet = new XMLHttpRequest();
-  RequestGet.onreadystatechange = function()
-  {
-    if (RequestGet.readyState == XMLHttpRequest.DONE)
-    {
-      if (RequestGet.status == 200)
-      {
-        console.log("Get Item Success");
-        console.log(RequestGet.responseText);
-        if(Update == false)
-        {
-            CreateTable(JSON.parse(RequestGet.responseText));
-        }
-        Fill_Input_Boxes(JSON.parse(RequestGet.responseText));
-      }
-      else
-      {
-        console.log("Get Item Failed");
-        alert("Couldn't Find Item. \n ID Not Found");
-      }
-    }
-  };
-
-  RequestGet.open("GET", (myURLAnimals+"/"+ID));//Set request type
-  RequestGet.withCredentials = true;
-  RequestGet.send();//Send Request
-};
 
 //Gets called when clicked on id buttons
 var ConnectIDButtonsGet = function()
 {
   ID = this.innerHTML;
-  GetAnimal(true, ID);
+  Get("Animal", false, ID);
   document.getElementById("id").value = ID;
 }
 
-//--------------------POST-----------------------
-var CreateBtn = document.getElementById("CreateBtn");
-CreateBtn.onclick = function()
-{
-  if(ValidateInputAll())
-  {
-      POST();
-  }
-  else
-  {
-    console.log("Fill all the info in form");
-  }
-};
 
-var POST = function()
+
+//--------------------POST-----------------------
+
+var POST = function(type)
 {
   var RequestPost = new XMLHttpRequest();
   RequestPost.onreadystatechange = function()
   {
     if (RequestPost.readyState == XMLHttpRequest.DONE)
     {
-      if(RequestPost.status == 201)
+      if (RequestPost.status == 200)//Login
       {
-        ClearInputBoxes();
-        GetAnimals();
+        ClearInputBoxesLogin();
+        Get("Animals", true);
+      }
+      else if(RequestPost.status == 201)
+      {
+        if(type == "Animals")//Create Animal
+        {
+          ClearInputBoxes();
+          Get("Animals", true);
+        }
+        else if (type == "Register")//Register
+        {
+            ClearInputBoxesRegister();
+            Get("Animals", true);
+        }
         //console.log(RequestPost.responseText);
       }
       else
@@ -322,13 +146,42 @@ var POST = function()
     }
   };
 
-  //Request Code
-  var Path = ConstructPathPOST();
+  //ConstructPath and URL
+  if(type == "Animals")
+  {
+    Path = ConstructPathPOST();
+    URL = myURLAnimals;
+  }
+  else if (type == "Register")
+  {
+    Path = ConstructPathPOSTRegister();
+    URL = myURLRegister;
+  }
+  else if (type == "Login")
+  {
+    Path = ConstructPathPOSTLogin();
+    URL = myURLogin;
+  }
+
   //Send Request
-  RequestPost.open("POST", myURLAnimals);
+  RequestPost.open("POST", URL);
   RequestPost.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   RequestPost.withCredentials = true;
   RequestPost.send(Path);
+};
+
+//------ANIMALS-------
+var CreateBtn = document.getElementById("CreateBtn");
+CreateBtn.onclick = function()
+{
+  if(ValidateInputAll())
+  {
+      POST("Animals");
+  }
+  else
+  {
+    console.log("Fill all the info in form");
+  }
 };
 
 var ConstructPathPOST = function()
@@ -376,6 +229,120 @@ ClearBtn.onclick = function()
   ClearInputBoxes();
 };
 
+//-------------REGISTER--------------------------
+var RegisterBtn = document.getElementById("RegisterBtn");
+RegisterBtn.onclick = function()
+{
+  if(ValidateInputAllRegister())
+  {
+      POST("Register");
+  }
+  else
+  {
+    console.log("Register Input error");
+  }
+};
+
+
+var ConstructPathPOSTRegister = function()
+{
+  var Path = "";
+  var Val ="";
+  for(i =0; i<KeysRegister.length; i++)
+  {
+    Val = encodeURIComponent(document.getElementById(InputBoxesNamesRegister[i]).value);
+    Path= Path + KeysRegister[i]+ "=" + Val;
+    //Add & for all entries before the last one
+    if(i != KeysRegister.length-1)
+    {
+      Path+="&";
+    }
+  }
+  return Path;
+};
+
+//Check if all boxes have an input value
+var ValidateInputAllRegister = function()
+{
+  for(i =0; i<InputBoxesNamesRegister.length; i++)
+  {
+    if(document.getElementById(InputBoxesNamesRegister[i]).value == "")
+    {
+      return false;
+    }
+  }
+  //validate password confirm
+  var psswrd = document.getElementById("password").value;
+  var c_psswrd = document.getElementById("confirm_password").value;
+  if(psswrd!=c_psswrd)
+  {
+    return false;
+    console.log("Passwords do not match")
+  }
+  return true;
+};
+
+var ClearInputBoxesRegister = function()
+{
+  for(i =0; i<InputBoxesNamesRegister.length; i++)
+  {
+      document.getElementById(InputBoxesNamesRegister[i]).value = "";
+  }
+};
+
+//------------------------------LOGIN---------------------------
+
+var LoginBtn = document.getElementById("LoginBtn");
+LoginBtn.onclick = function()
+{
+  if(ValidateInputAllLogin())
+  {
+      POST("Login");
+  }
+  else
+  {
+    console.log("Register Input error");
+  }
+};
+
+var ConstructPathPOSTLogin = function()
+{
+  var Path = "";
+  var Val ="";
+  for(i =0; i<KeysLogin.length; i++)
+  {
+    Val = encodeURIComponent(document.getElementById(InputBoxesNamesLogin[i]).value);
+    Path= Path + KeysLogin[i]+ "=" + Val;
+    //Add & for all entries before the last one
+    if(i != KeysLogin.length-1)
+    {
+      Path+="&";
+    }
+  }
+  return Path;
+};
+
+//Check if all boxes have an input value
+var ValidateInputAllLogin = function()
+{
+  for(i =0; i<InputBoxesNamesLogin.length; i++)
+  {
+    if(document.getElementById(InputBoxesNamesLogin[i]).value == "")
+    {
+      return false;
+    }
+  }
+  return true;
+};
+
+var ClearInputBoxesLogin = function()
+{
+  for(i =0; i<InputBoxesNamesLogin.length; i++)
+  {
+      document.getElementById(InputBoxesNamesLogin[i]).value = "";
+  }
+};
+
 //-----------------------DELETE--------------------
 
 var DeleteItem = function(ID)
@@ -387,7 +354,7 @@ var DeleteItem = function(ID)
     {
       if (RequestDel.status == 204)
       {
-        GetAnimals();
+        Get("Animals", true);
       }
       else
       {
@@ -434,7 +401,7 @@ var UpdateItem = function(ID)
       if(RequestPut.status == 201)
       {
         //ClearInputBoxes();
-        GetAnimal(false, ID);//False to display single table
+        Get("Animal",true, ID);//False to display single table
         //console.log(RequestPut.responseText);
       }
       else
@@ -456,7 +423,7 @@ var UpdateItem = function(ID)
 var ConnectIDButtonsUpdate = function()
 {
   ID = this.value;
-  GetAnimal(false, ID);
+  Get("Animal", true, ID);
   if(ValidateInputAll())
   {
     UpdateItem(ID);
@@ -548,4 +515,4 @@ var CreateTable = function(data)
   }
 };
 
-GetAnimals();
+Get("Animals", true);
