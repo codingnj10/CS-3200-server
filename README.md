@@ -41,24 +41,24 @@ city VARCHAR,
 state VARCHAR(2) NOT NULL);
 
 ## REST
-#### Table name: Animals
-# Retrieve
+### Table name: Animals
+#### Retrieve
 GET /animals/*ID*
-# List
+#### List
 GET /animals
-# Create
+#### Create
 POST /animals
-# Put
+#### Put
 PUT /animals/*ID*
-# Delete
+#### Delete
 DELETE /animals/*ID*
 
-#### Table name: users
-# Retrieve
+### Table name: users
+#### Retrieve
 GET /users
-# Create
+#### Create
 POST /users
-# Login
+#### Login
 POST /sessions
-# Logout
+#### Logout
 POST /logout
