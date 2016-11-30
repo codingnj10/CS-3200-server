@@ -11,42 +11,46 @@
     <img id=fox src="logoc.png" alt="My animal"/>
   </div>
 
-  <div id=Div_Register>
-    <h2> Create New User </h2>
-    <input id=fname type="text" size="20" placeholder="First Name">
-    <input id=lname type="text" size="10" placeholder="Last Name">
-    <input id=address type="text" size="10" placeholder="Address">
-    <input id=city size="10" type="text" placeholder="City">
-    <input id=state type="text" size="20" placeholder="State">
-    <input id=phone type="text" size="10" placeholder="Phone Number">
-    <input id=email type="text" size="10" placeholder="E-mail">
-    <input id=password size="10" type="text" placeholder="Password">
-    <input id=confirm_password size="10" type="text" placeholder="Confirm Password">
-    <button id=RegisterBtn> Register </button>
+  <div id=Registration_Forms>
+
+    <div id=Div_Login>
+      <h2> Login </h2>
+      <input id=loginemail type="text" size="20" placeholder="E-mail"><br><br>
+      <input id=loginpassword size="20" type="password" placeholder="Password"><br><br>
+      <button id=LoginBtn> Login </button>
+    </div>
+
+    <div id=Div_Register>
+      <h2> Create New User </h2>
+      <text> First Name: </text><input id=fname type="text" size="20" placeholder="First Name"><br><br>
+      <text> Last Name: </text><input id=lname type="text" size="20" placeholder="Last Name"><br><br>
+      <text> Address: </text><input id=address type="text" size="20" placeholder="Address"><br><br>
+        <text> Phone: </text><input id=phone type="text" size="20" placeholder="Phone Number"><br><br>
+      <text> City: </text><input id=city size="10" type="text" placeholder="City"><br><br>
+      <text> State: </text><input id=state type="text" size="2" placeholder="State"><br><br>
+      <text> Email: </text><input id=email type="text" size="20" placeholder="E-mail"><br><br>
+      <text> Password: </text><input id=password size="20" type="password" placeholder="Password"><br><br>
+      <text> Confirm Password: </text><input id=confirm_password size="20" type="password" placeholder="Confirm Password"><br><br>
+      <button id=RegisterBtn> Register </button>
+    </div>
   </div>
 
-  <div id=Div_Login>
-    <h2> Login </h2>
-    <input id=loginemail type="text" size="10" placeholder="E-mail">
-    <input id=loginpassword size="10" type="text" placeholder="Password">
-    <button id=LoginBtn> Login </button>
-  </div>
-
-  <div id=Input_Create>
-    <h2> Create New Entry </h2>
-    <input id=name type="text" size="20" placeholder="Name">
-    <input id=animal type="text" size="10" placeholder="Kind of animal">
-    <input id=breed type="text" size="10" placeholder="Breed">
-    <input id=color size="10" type="text" placeholder="Color">
-    <select id=gender>
-      <option value="" disabled="disabled" selected="selected">Gender</option>
-      <option value="Male">Male</option>
-      <option value="Female">Female</option>
-    </select>
-    <input id=age type="text" size="3" placeholder="Age">
-    <button id=CreateBtn> Create </button>
-    <button id=ClearBtn> Clear </button>
-  </div>
+  <div id=Div_Animals>
+    <div id=Input_Create>
+      <h2> Create New Animal </h2>
+      <input id=name type="text" size="20" placeholder="Name">
+      <input id=animal type="text" size="10" placeholder="Kind of animal">
+      <input id=breed type="text" size="10" placeholder="Breed">
+      <input id=color size="10" type="text" placeholder="Color">
+      <select id=gender>
+        <option value="" disabled="disabled" selected="selected">Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+      <input id=age type="text" size="3" placeholder="Age">
+      <button id=CreateBtn> Create </button>
+      <button id=ClearBtn> Clear </button>
+    </div>
 
     <div id=Input_Search>
       <h2> Find by ID </h2>
@@ -55,11 +59,13 @@
       <button id=GetAllBtn> Display All </button>
     </div>
 
-
     <div id=Info>
+      <h2 id=Welcome_message> </h2>
+      <button id=LogoutBtn> Log Out </button>
       <table id="Data">
       </table>
     </div>
+  </div>
 
     <script src="Animals.js"></script>
   </body>

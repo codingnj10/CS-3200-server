@@ -1,4 +1,3 @@
-
 //------------------------USERS REGISTER---------------------------
 var myURLRegister = "http://localhost:8080/users";
 var InputBoxesNamesRegister = ["fname", "lname", "address", "city", "state", "phone", "email", "password", "confirm_password"];
@@ -16,8 +15,21 @@ var Keys = ["name", "animal", "type", "color", "gender", "age"];
 var AnimalKeys = ["id","name", "animal", "type", "color", "gender", "age"];
 var Headers = ["ID", "Name", "Type of Animal", "Breed", "Color", "Gender", "Age"];//To create headers of table
 
-//--------------------POST-----------------------
+//-------------------------------------------------HIDE DIVS-------------------------------------
+var ShowLogin = true;
+var ShowAnimals = false;
+var ShowRegister = false;
+var visible = 'block';
+var hidden = 'none';
 
+
+var HideDivs = function(RegState, AniState)
+{
+  var RegisterDiv = document.getElementById("Registration_Forms");
+  var AnimalsDiv = document.getElementById("Div_Animals");
+  RegisterDiv.style.display=RegState;
+  AnimalsDiv.style.display=AniState;
+};
 
 //--------------------------------------GET--------------------------------
 var Get = function(type, Update , ID=0)
@@ -29,23 +41,44 @@ var Get = function(type, Update , ID=0)
     {
       if (RequestGet.status == 200)
       {
-        console.log("Get Items Success");
+        //Handle response depending on request type
+        //Get Collection Of Animals
         if(type == "Animals" || Update == true)//Whether or not to update table
         {
+          HideDivs(hidden, visible);
           CreateTable(JSON.parse(RequestGet.responseText));
           ClearInputBoxes();
+          console.log("Get Animals Success");
         }
+
         //For get of a single animal fill input boxes for update
         if(type == "Animal")
         {
+          HideDivs(hidden, visible);
           Fill_Input_Boxes(JSON.parse(RequestGet.responseText));
+          console.log("Get Animal Success");
         }
-
-        //console.log(RequestGetAll.responseText);
+        if(type == "User")
+        {
+          //set welcome message
+          SetWelcomeMessage(JSON.parse(RequestGet.responseText));
+          console.log("Get User Success");
+        }
       }
       else
       {
-        console.log("Get All Items Failed");
+        if(type == "Animals")
+        {
+          console.log("Get Animals Failed");
+        }
+        else if(type == "User")
+        {
+          console.log("Get User Failed");
+        }
+        if(RequestGet.status == 401)
+        {
+          HideDivs(visible, hidden);
+        }
       }
     }
   };
@@ -59,12 +92,24 @@ var Get = function(type, Update , ID=0)
   {
     URL = myURLAnimals + "/" + ID;
   }
+  else if(type == "User")
+  {
+    URL = myURLRegister;
+  }
   RequestGet.open("GET", URL);
   RequestGet.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   RequestGet.withCredentials = true;
   RequestGet.send();
 };
 
+//--------------------GET   USER -------------------------
+var SetWelcomeMessage = function(data)
+{
+  var First = data["users"][0]["fname"];
+  var Last = data["users"][0]["lname"];
+  var Message = document.getElementById("Welcome_message");
+  Message.innerHTML = "Welcome " + First + " " + Last;
+}
 
 //------------------GET ANIMALS--------------------------
 
@@ -107,7 +152,7 @@ var ConnectIDButtonsGet = function()
   ID = this.innerHTML;
   Get("Animal", false, ID);
   document.getElementById("id").value = ID;
-}
+};
 
 
 
@@ -120,10 +165,20 @@ var POST = function(type)
   {
     if (RequestPost.readyState == XMLHttpRequest.DONE)
     {
-      if (RequestPost.status == 200)//Login
+      if (type == "Login")//Login
       {
-        ClearInputBoxesLogin();
-        Get("Animals", true);
+        if(RequestPost.status == 200)
+        {
+          //---------LOGIN SUCCESSFUL------
+          ClearInputBoxesLogin();
+          Get("User", false);
+          Get("Animals", true);
+          console.log("Login Successful");
+        }
+        else if(RequestPost.status == 401)
+        {
+          alert("Email/Password Incorrect");
+        }
       }
       else if(RequestPost.status == 201)
       {
@@ -131,16 +186,38 @@ var POST = function(type)
         {
           ClearInputBoxes();
           Get("Animals", true);
+          console.log("Animal Created");
         }
         else if (type == "Register")//Register
         {
             ClearInputBoxesRegister();
+            Get("User", false);
             Get("Animals", true);
+            console.log("User Created");
         }
         //console.log(RequestPost.responseText);
       }
+      else if(RequestPost.status == 422)
+      {
+        alert("User Not Created\nEmail already taken");
+      }
+      else if(type == "LogOut")
+      {
+        if(RequestPost.status == 200)
+        {
+            //if log out was Successful
+            //Clear Table
+            document.getElementById("Data").innerHTML = "";
+            //hide the Animals Div
+            HideDivs(visible, hidden);
+            console.log("Logout Successful");
+        }
+      }
       else
       {
+        //-------------ANY OTHER POST FAILED
+        //Ask to authenticate again
+        HideDivs(visible, hidden);
         console.log("POST Failed");
       }
     }
@@ -162,12 +239,25 @@ var POST = function(type)
     Path = ConstructPathPOSTLogin();
     URL = myURLogin;
   }
+  else if (type == "LogOut")
+  {
+    URL = "http://localhost:8080/logout";
+    Path = "";
+  }
 
   //Send Request
   RequestPost.open("POST", URL);
   RequestPost.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   RequestPost.withCredentials = true;
   RequestPost.send(Path);
+};
+
+//------------------LOG OUT--------------------------
+
+var LogoutBtn = document.getElementById("LogoutBtn");
+LogoutBtn.onclick = function()
+{
+  POST("LogOut");
 };
 
 //------ANIMALS-------
@@ -237,10 +327,6 @@ RegisterBtn.onclick = function()
   {
       POST("Register");
   }
-  else
-  {
-    console.log("Register Input error");
-  }
 };
 
 
@@ -276,8 +362,8 @@ var ValidateInputAllRegister = function()
   var c_psswrd = document.getElementById("confirm_password").value;
   if(psswrd!=c_psswrd)
   {
+    alert("Passwords do not match")
     return false;
-    console.log("Passwords do not match")
   }
   return true;
 };
@@ -301,7 +387,7 @@ LoginBtn.onclick = function()
   }
   else
   {
-    console.log("Register Input error");
+    console.log("Login Input error");
   }
 };
 
@@ -358,6 +444,9 @@ var DeleteItem = function(ID)
       }
       else
       {
+        //-------------DELETE FAILED
+        //Ask to authenticate again
+        HideDivs(visible, hidden);
         console.log("Delete Item Failed");
       }
     }
@@ -406,6 +495,9 @@ var UpdateItem = function(ID)
       }
       else
       {
+        //-------------UPDATE FAILED
+        //Ask to authenticate again
+        HideDivs(visible, hidden);
         console.log("PUT Failed");
       }
     }
@@ -515,4 +607,5 @@ var CreateTable = function(data)
   }
 };
 
+Get("User", false);
 Get("Animals", true);

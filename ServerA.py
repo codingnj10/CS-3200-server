@@ -47,17 +47,25 @@ class myServer(BaseHTTPRequestHandler):
         elif self.path.startswith("/animals"):
             #if session was loaded succesfully, send database info
             if self.LoadSession(dbusers):
+                UserID = self.getDataFromSessionIDCookie()
                 self.send200()
                 #Get DB and Convert json to string
                 StringDatabase = json.dumps(dbanimals.getAnimals())
                 self.wfile.write(bytes(StringDatabase, "utf-8"))
             else:
                 self.NotAuthorized()
+        elif self.path.startswith("/users"):
+            if self.LoadSession(dbusers):
+                UserID = self.getDataFromSessionIDCookie()
+                self.send200()
+                #Get DB and Convert json to string
+                StringUser = json.dumps(dbusers.getUser(UserID))
+                self.wfile.write(bytes(StringUser, "utf-8"))
+            else:
+                self.NotAuthorized()
         else:
             self.NotFound()
         return
-
-
 
 #-----------------------------------------------POST-------------------------------
     def do_POST(self):
@@ -86,7 +94,12 @@ class myServer(BaseHTTPRequestHandler):
                 #Find the id of newly created entry
                 new_entry_id = dbusers.FindIDbyEmail(Parsed_Data["email"][0])
 
-
+                #Check if SessionID in cookie is invalid, if so create a new session and put it on cookie
+                if(self.getDataFromSessionIDCookie() == None):
+                    self.PutNewSessionIDInCookie(new_entry_id)
+                else:
+                    #Create a new session and put id on cookie
+                    self.PutID_In_Cookie_Session(new_entry_id)
                 #Create a session and store its session id in cookie
                 self.PutID_In_Cookie_Session(new_entry_id)
                 self.sendCreated()
@@ -98,6 +111,7 @@ class myServer(BaseHTTPRequestHandler):
         elif self.path.startswith("/sessions"):
             #Load_Cookie
             self.Load_Cookie()
+
             #Get data from form
             Lenght = int(self.headers['Content-Length'])
             data = self.rfile.read(int(Lenght)).decode("utf-8")#gets path as string
@@ -111,8 +125,12 @@ class myServer(BaseHTTPRequestHandler):
                     #Find the id of user
                     new_entry_id = dbusers.FindIDbyEmail(Parsed_Data["email"][0])
 
-                    #Create a new session and put id on cookie
-                    self.PutID_In_Cookie_Session(new_entry_id)
+                    #Check if SessionID in cookie is invalid create a new session and put it on cookie
+                    if(self.getDataFromSessionIDCookie() == None):
+                        self.PutNewSessionIDInCookie(new_entry_id)
+                    else:
+                        #Create a new session and put id on cookie
+                        self.PutID_In_Cookie_Session(new_entry_id)
                     self.send200()
                 else:
                     self.NotAuthorized()
@@ -135,7 +153,14 @@ class myServer(BaseHTTPRequestHandler):
                 self.wfile.write(bytes("Created", "utf-8"))
             else:
                 self.NotAuthorized()
-
+        #----------------------------------LOG OUT--------------------------
+        elif self.path.startswith("/logout"):
+                #If User is logged in
+                if self.LoadSession(dbusers):
+                    mySessions.Put_User_ID_On_Session(self.Cookie["SSID"].value, None)
+                    self.send200()
+                else:
+                    self.NotAuthorized()
         else:
             self.NotFound()
         return
@@ -278,10 +303,6 @@ class myServer(BaseHTTPRequestHandler):
             self.NotFound()
         return
 
-    #------------------------------------AUTHENTICATE------------------------------------
-
-
-
     #-----------------------------------GET ID FROM PATH-------------------------------------
 
     def getIDFromPath(self):
@@ -314,7 +335,7 @@ class myServer(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Origin", self.headers["Origin"])
         self.send_header("Access-Control-Allow-Credentials", "true")
         self.end_headers()#points end of header
-        self.wfile.write(bytes("Registration Succesful", "utf-8"))
+        self.wfile.write(bytes("Create Succesful", "utf-8"))
 
     def sendAccepted(self):
         self.send_response(202)
@@ -327,7 +348,7 @@ class myServer(BaseHTTPRequestHandler):
 
     def sendNoContent(self):
         self.send_response(204)
-        self.send_header('Content-type','text/plain')
+        self.send_header('Content-type','none')
         self.Send_Cookie()
         self.send_header("Access-Control-Allow-Origin", self.headers["Origin"])
         self.send_header("Access-Control-Allow-Credentials", "true")
@@ -360,7 +381,7 @@ class myServer(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Origin", self.headers["Origin"])
         self.send_header("Access-Control-Allow-Credentials", "true")
         self.end_headers()#points end of header
-        self.wfile.write(bytes("Email or Password Didn't Match", "utf-8"))
+        self.wfile.write(bytes("Failed to authenticate", "utf-8"))
         return
 
 
