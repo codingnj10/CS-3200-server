@@ -257,7 +257,7 @@ var POST = function(type)
 var LogoutBtn = document.getElementById("LogoutBtn");
 LogoutBtn.onclick = function()
 {
-  POST("LogOut");
+  DeleteItem(0,"LogOut");
 };
 
 //------ANIMALS-------
@@ -431,7 +431,7 @@ var ClearInputBoxesLogin = function()
 
 //-----------------------DELETE--------------------
 
-var DeleteItem = function(ID)
+var DeleteItem = function(ID, type)
 {
   var RequestDel = new XMLHttpRequest();
   RequestDel.onreadystatechange = function()
@@ -442,9 +442,15 @@ var DeleteItem = function(ID)
       {
         Get("Animals", true);
       }
+      else if(RequestDel.status == 200)
+      {
+        //-------------LOGGED OUT--------
+        HideDivs(visible, hidden);
+        console.log("Delete Item Failed");
+      }
       else
       {
-        //-------------DELETE FAILED
+        //-------------DELETE FAILED------
         //Ask to authenticate again
         HideDivs(visible, hidden);
         console.log("Delete Item Failed");
@@ -452,8 +458,18 @@ var DeleteItem = function(ID)
     }
   };
 
+  //ConstructPath and URL
+  if(type == "Animal")
+  {
+    URL = myURLAnimals+"/"+ID;
+  }
+  else if (type == "LogOut")
+  {
+    URL = myURLogin;
+  }
+
   //ConstructPath
-  RequestDel.open("DELETE", (myURLAnimals+"/"+ID));//Set request type
+  RequestDel.open("DELETE", (URL));//Set request type
   RequestDel.withCredentials = true;
   RequestDel.send();//Send Request
 };
@@ -464,7 +480,7 @@ var ConnectIDButtonsDelete = function()
   ID = this.value;
   if(confirm("You want to delete?") == true)
   {
-    DeleteItem(ID);
+    DeleteItem(ID, "Animal");
   }
 };
 

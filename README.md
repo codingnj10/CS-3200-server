@@ -61,4 +61,4 @@ POST /users
 #### Login
 POST /sessions
 #### Logout
-POST /logout
+DELETE /sessions

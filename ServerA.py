@@ -153,14 +153,14 @@ class myServer(BaseHTTPRequestHandler):
                 self.wfile.write(bytes("Created", "utf-8"))
             else:
                 self.NotAuthorized()
-        #----------------------------------LOG OUT--------------------------
-        elif self.path.startswith("/logout"):
-                #If User is logged in
-                if self.LoadSession(dbusers):
-                    mySessions.Put_User_ID_On_Session(self.Cookie["SSID"].value, None)
-                    self.send200()
-                else:
-                    self.NotAuthorized()
+        # #----------------------------------LOG OUT--------------------------
+        # elif self.path.startswith("/logout"):
+        #         #If User is logged in
+        #         if self.LoadSession(dbusers):
+        #             mySessions.Put_User_ID_On_Session(self.Cookie["SSID"].value, None)
+        #             self.send200()
+        #         else:
+        #             self.NotAuthorized()
         else:
             self.NotFound()
         return
@@ -290,7 +290,6 @@ class myServer(BaseHTTPRequestHandler):
         if self.path.startswith("/animals/"):
             if self.LoadSession(dbusers):
                 ID = self.getIDFromPath()
-
                 if(db.FindItem(ID)):
                     self.sendNoContent()
                     db.deleteAnimal(ID)
@@ -299,6 +298,15 @@ class myServer(BaseHTTPRequestHandler):
                     self.NotFound()
             else:
                 self.NotAuthorized()
+        elif self.path.startswith("/sessions"):
+            if self.LoadSession(dbusers):
+                #Put a None user for the session ID
+                mySessions.Put_User_ID_On_Session(self.Cookie["SSID"].value, None)
+                self.send200()
+            else:
+                self.NotAuthorized()
+
+
         else:
             self.NotFound()
         return
