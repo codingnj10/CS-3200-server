@@ -1,0 +1,91 @@
+
+#Title
+{
+  margin-left: 25%;
+}
+
+button
+{
+  font-size: 21px;
+}
+
+/*-------------------------INPUT BOXES*/
+
+input[type="text"], textarea
+{
+  font-size: 21px;
+  background-color : #d1d1d1;
+}
+
+::-webkit-input-placeholder
+{
+   color: #516666;
+}
+
+::-moz-placeholder
+{
+   color: #516666;
+}
+
+#Creation_Form
+{
+  display: inline-block;
+  margin-left: 27%;
+  margin-top: 20px;
+  margin-bottom: 5px;
+}
+
+/*-------------------TICKETS----------------------*/
+.Normal_Ticket
+{
+  background-color: rgba(86, 86, 83, 0.7);
+  margin-bottom: 50px;
+  margin-left: 20px;
+  display: inline-block;
+  width: 205px;
+  padding-right: 20px;
+  padding-left: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background: linear-gradient(to left, rgba(86, 86, 83, 0.7), rgba(25,25,25, 0.6));
+  border-radius: 10%;
+}
+
+.Golden_Ticket
+{
+  background-color: rgba(207,181,59, 0.6);
+  margin-bottom: 50px;
+  margin-left: 20px;
+  display: inline-block;
+  width: 205px;
+  padding-right: 20px;
+  padding-left: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background: linear-gradient(to left, rgba(240,230,140, 0.6), rgba(255,223,0, 0.6));
+  color: black;
+  border-radius: 10%;
+}
+
+#Tickets_Div
+{
+  height: 550px;
+  font-size: 22px;
+  color: white;
+  overflow-y: auto;
+}
+
+#Tickets_Title
+{
+  text-align: center;
+  font-size: 40px;
+  color: white;
+}
+
+body
+{
+  background-color:#4f2602;
+  background-image: url("bg1.png");
+  background-size: cover;
+  color: black;
+}
